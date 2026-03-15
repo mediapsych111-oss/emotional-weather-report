@@ -283,7 +283,7 @@ export default function Home() {
                       value={reflection2}
                       onChange={(e) => setReflection2(e.target.value)}
                       rows={3}
-                      placeholder="Write whatever comes up, even if it&apos;s incomplete..."
+                      placeholder="Write whatever comes up, even if it's incomplete..."
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-[#f0ece6] placeholder:text-[#f0ece6]/20 resize-none focus:outline-none focus:ring-1 focus:ring-[#c8a96e]/30 leading-relaxed"
                     />
                     {reflection2.trim().length > 0 && !followupResult2 && (
@@ -325,8 +325,8 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Closing anchor */}
-                {(followupResult2 || (!showRound2 && followupResult)) && !followupLoading2 && (
+                {/* Closing anchor — only after round 2 */}
+                {followupResult2 && !followupLoading2 && (
                   <div className="border border-white/10 rounded-lg px-5 py-4 mt-2">
                     <p className="text-sm text-[#f0ece6]/40 leading-relaxed italic">
                       Awareness of the weather is the first move. The next is deciding what to do in it.
@@ -342,7 +342,21 @@ export default function Home() {
   );
 }
 
+function getTimeLabel(): string {
+  const now = new Date();
+  const day = now.toLocaleDateString("en-US", { weekday: "long" });
+  const hour = now.getHours();
+  let period: string;
+  if (hour >= 5 && hour < 12) period = "morning";
+  else if (hour >= 12 && hour < 17) period = "afternoon";
+  else if (hour >= 17 && hour < 21) period = "evening";
+  else period = "night";
+  return `${day} ${period}`;
+}
+
 function WeatherReport({ result }: { result: WeatherResult }) {
+  const timeLabel = getTimeLabel();
+
   return (
     <div className="space-y-4">
       {/* Weather header card */}
@@ -350,7 +364,7 @@ function WeatherReport({ result }: { result: WeatherResult }) {
         <div className="flex items-start justify-between gap-4 mb-3">
           <div>
             <span className="text-xs text-[#c8a96e] uppercase tracking-wider font-medium block mb-1">
-              Current Conditions
+              Current Conditions &middot; {timeLabel}
             </span>
             <h2 className="text-lg font-semibold text-[#f0ece6] leading-tight">
               {result.condition}

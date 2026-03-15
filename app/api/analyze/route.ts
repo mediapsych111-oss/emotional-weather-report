@@ -24,7 +24,13 @@ export async function POST(req: NextRequest) {
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
-      system: ANALYSIS_SYSTEM_PROMPT,
+      system: [
+        {
+          type: "text",
+          text: ANALYSIS_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
       messages: [{ role: "user", content: text.trim() }],
     });
 
